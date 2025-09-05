@@ -24,8 +24,8 @@ pipeline {
       steps {
         sh '''
           set -e
-          docker build -t myweb:${BUILD_NUMBER} .
-          docker tag myweb:${BUILD_NUMBER} myweb:latest
+          docker build -t ramki:${BUILD_NUMBER} .
+          docker tag ramki:${BUILD_NUMBER} ramki:latest
         '''
       }
     }
@@ -33,12 +33,12 @@ pipeline {
       steps {
         sh '''
           set -e
-          # Stop & remove any previous container named 'myweb'
-          if [ "$(docker ps -aq -f name=myweb)" ]; then
-            docker rm -f myweb || true
+          # Stop & remove any previous container named 'ramki'
+          if [ "$(docker ps -aq -f name=ramki)" ]; then
+            docker rm -f ramki || true
           fi
           # Run new container on host port 80
-          docker run -d --name myweb -p 80:80 myweb:latest
+          docker run -d --name ramki -p 80:80 ramki:latest
         '''
       }
     }
