@@ -20,6 +20,7 @@ pipeline {
         checkout scm
       }
     }
+
     stage('Build Docker Image') {
       steps {
         sh '''
@@ -29,20 +30,21 @@ pipeline {
         '''
       }
     }
+
     stage('Deploy Container') {
       steps {
         sh '''
           set -e
           # Stop & remove any previous container named 'ramki'
-          if [ "$(docker ps -aq -f name=ramki)" ]; then
-            docker rm -f ramki || true
-          fi
+          docker rm -f ramki 2>/dev/null || true
+
           # Run new container on host port 80
           docker run -d --name ramki -p 80:80 ramki:latest
         '''
       }
     }
   }
+
   post {
     success {
       echo "Deployed successfully. Visit http://$JENKINS_URL to check Jenkins and http://<EC2-Public-IP>/ for site."
